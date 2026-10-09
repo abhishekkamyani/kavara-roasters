@@ -1,0 +1,69 @@
+<role>
+You are an elite Full-Stack Next.js Developer, Creative UI/UX Designer, and Enterprise SaaS Architect. Your task is to autonomously build "Kavara Roasters," a premium B2B wholesale coffee ordering portal and admin CRM.
+</role>
+
+<project_definition>
+We are building a production-grade B2B wholesale platform.
+- Stack: Next.js 16 (App Router), Tailwind CSS, Shadcn UI, MongoDB (via Mongoose), NextAuth.js v5 (Credentials), UploadThing (Image Bucket), and Framer Motion.
+- Core Business Logic: Clients log in to view the wholesale catalog. Prices are dynamically calculated based on the client's tier (Bronze = Base Price, Silver = 10% off, Gold = 15% off). The cart must enforce a Minimum Order Quantity (MOQ) of 5kg per checkout.
+- Portals: 
+  1. Client Portal: View products, manage cart, place wholesale orders, and view past invoices.
+  2. Admin Portal: View all orders, update statuses, and upload new products using UploadThing.
+</project_definition>
+
+<ui_ux_and_3d_requirements>
+- Theme & Vibe: Sleek, high-end artisanal luxury. 
+- Palette: Deep Espresso (#17120e) for dark backgrounds, Warm Crema (#f4ede4) for light panels, Matte Black typography, and subtle Gold/Amber (#d4af37) accents for primary buttons. 
+- 3D Interactive Feature: The product catalog must use Framer Motion 3D transforms (`preserve-3d`, `rotateX`, `rotateY` based on mouse movement) to give the coffee bags a physical, tactile 3D hover effect.
+- Animations: Smooth staggered reveals on catalog load, slide-in cart drawers, and liquid/smooth transitions for UI state changes.
+</ui_ux_and_3d_requirements>
+
+<execution_steps>
+Execute the following steps sequentially:
+
+Step 1: Scaffolding & Setup
+- Scaffold a Next.js App Router project with TypeScript and Tailwind CSS.
+- Install dependencies: `mongoose`, `next-auth@beta`, `bcryptjs`, `uploadthing`, `@uploadthing/react`, `framer-motion`, `lucide-react`, `zustand` (for cart state).
+- Initialize Shadcn UI and add: button, input, card, badge, dialog, sheet, select, table, toast.
+- Configure local MongoDB connection utility in `lib/mongodb.ts`.
+
+Step 2: Database Architecture (Mongoose) & Dummy Data
+- Create Mongoose schemas in `models/`:
+  1. `User` (companyName, email, password, role: ['ADMIN', 'CLIENT'], tier: ['BRONZE', 'SILVER', 'GOLD']).
+  2. `Product` (name, origin, roastLevel, basePrice, moqKg, imageUrl).
+  3. `Order` (clientId, items: [{productId, quantity, priceAtPurchase}], totalAmount, status: ['PENDING', 'INVOICED', 'SHIPPED']).
+- Write a Node.js seed script (`scripts/seed.ts`) that hashes passwords via `bcryptjs` and populates:
+  - 1 Admin (`admin@kavara.com` / `password123`).
+  - 1 Gold Client (`cafe@gold.com` / `password123`, tier: 'GOLD').
+  - 5 dummy coffee products (e.g., "Ethiopian Yirgacheffe Single Origin", "Sumatra Dark Reserve") with realistic wholesale base prices and Unsplash placeholder image URLs.`
+
+Step 3: Security & UploadThing Integration
+- Set up NextAuth (`auth.ts`) using Credentials. The `authorize` function must connect to MongoDB, verify the user, and inject `role` and `tier` into the session token.
+- Create `middleware.ts` protecting `/dashboard` (client) and `/admin` (admin) routes.
+- Set up UploadThing route handler in `app/api/uploadthing/core.ts` for product images. Export the `UploadDropzone` component.
+
+Step 4: Client Portal (B2B Ordering)
+- Build `/dashboard`: The main catalog view for logged-in cafes. 
+- Use Framer Motion to build the 3D tilt Product Cards.
+- Implement dynamic pricing logic: Read the user's `tier` from the session and visually cross out the base price, showing their discounted price.
+- Build a slide-out Cart Drawer (using Zustand or React Context). Enforce the MOQ logic (e.g., "You must add 2 more kg to reach the 5kg minimum").
+- Create a Server Action to submit the order and write it to the `Order` collection.
+
+Step 5: Admin CRM (`/admin`)
+- Build `/admin/products/new`: A secure form where admins input product details and physically upload coffee bag images to UploadThing. Store the returning URL in MongoDB.
+- Build `/admin/orders`: A Shadcn data table displaying all incoming B2B orders with badges for statuses.
+
+Step 6: Testing & Polish
+- Output a markdown summary detailing how to run the seed script, configure the `.env` file (`MONGODB_URI`, `AUTH_SECRET`, `UPLOADTHING_SECRET`, `UPLOADTHING_APP_ID`), and log in.
+</execution_steps>
+
+<constraints>
+- Database Constraint: Strictly Mongoose and MongoDB. Do NOT install Prisma.
+- Authorization: Ensure clients cannot access the `/admin` routes. 
+- File Uploads: Real uploads through UploadThing for new products; do not mock image upload endpoints.
+- Autonomy: Autonomously resolve any TypeScript or dependency installation issues.
+</constraints>
+
+<output_format>
+Execute commands and write the application files directly without explanation. Finish with a summary providing setup instructions.
+</output_format>
