@@ -27,6 +27,7 @@ Open http://localhost:3000.
 | `AUTH_SECRET`       | NextAuth session secret. Generate one with `npx auth secret`.                                |
 | `AUTH_TRUST_HOST`   | Set to `true` when running `next start` outside Vercel (for example on localhost).           |
 | `UPLOADTHING_TOKEN` | UploadThing token from Dashboard → API Keys.                                                 |
+| `NEXT_PUBLIC_SITE_URL` | Public URL of the deployed site, no trailing slash. Used for canonical URLs, the sitemap and social previews. Optional locally; detected automatically on Vercel. |
 
 The installed UploadThing SDK (v7) reads a single `UPLOADTHING_TOKEN`. It
 replaces the `UPLOADTHING_SECRET` / `UPLOADTHING_APP_ID` pair used by older
@@ -82,6 +83,13 @@ returned URL on the product. In development UploadThing confirms uploads
 through the browser. In production its servers call
 `/api/uploadthing` back, so the app must be reachable from the internet —
 an upload against `next start` on localhost will wait forever.
+
+**SEO.** Only the landing page is meant to be found in search. It carries the
+title, description, canonical URL, Open Graph / Twitter tags, a generated
+share image (`app/opengraph-image.tsx`) and Organization + WebSite structured
+data. `/robots.txt` and `/sitemap.xml` are generated from `lib/site.ts`. The
+sign-in page and both portals are marked `noindex`, and the portals are also
+disallowed in `robots.txt`.
 
 ## Routes
 
