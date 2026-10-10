@@ -9,7 +9,12 @@ import {
 } from "@/components/ui/card";
 import { LoginForm } from "./login-form";
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = {
+  title: "Sign in",
+  description: "Sign in to your Kavara Roasters wholesale account.",
+  // A sign-in form is not something to land on from a search result.
+  robots: { index: false, follow: false },
+};
 
 export default function LoginPage() {
   return (

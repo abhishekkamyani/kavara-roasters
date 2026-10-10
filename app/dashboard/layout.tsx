@@ -1,5 +1,9 @@
 import { CartDrawer } from "@/components/cart/cart-drawer";
+import type { Metadata } from "next";
 import { PortalHeader } from "@/components/portal-header";
+
+// Everything in here needs a session, so keep it out of search results.
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const links = [
   { href: "/dashboard", label: "Catalog" },
