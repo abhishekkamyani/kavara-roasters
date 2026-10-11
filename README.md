@@ -118,7 +118,7 @@ disallowed in `robots.txt`.
 
 ## Developer
 
-Built and maintained by **Abhishek Kumar Kamyani**, a Full Stack Developer from
+Built and maintained by **Abhishek Kamyani**, a Full Stack Developer from
 Pakistan with 2+ years of experience building web products with React, Next.js
 and Node.js.
 
